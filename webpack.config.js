@@ -38,6 +38,17 @@ module.exports = {
                 ]
             },
             {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
+            },
+            {
+                test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+                loader: 'file-loader?name=img/img-[hash:6].[ext]',
+                options: {
+                    limit: 10000
+                }
+            },
+            {
                 test: /\.(js|es6)$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
@@ -48,7 +59,7 @@ module.exports = {
         ],
         loaders: [
             {
-                test: /\.(png|jpg|gif)$/,
+                test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
                 loader: "file-loader?name=img/img-[hash:6].[ext]"
             }
         ]
@@ -59,6 +70,12 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './html_template/html_template.html',
             inject: 'body',
+        }),
+
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
         })
     ]
 };

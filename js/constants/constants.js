@@ -13,3 +13,7 @@ export const AUTH = {
 export const MIN_PAGE_SIZE = 1;
 export const KEY_CODE_ENTER = 13;
 
+export const TYPE_FOLDER = ['folder'];
+export const TYPE_RESOURCES = ['reportOptions', 'dashboard', 'adhocDataView', 'reportUnit', 'domainTopic', 'inputControl'];
+
+export const CONTAINER_REPORT = '#jasper-report';

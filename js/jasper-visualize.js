@@ -1,5 +1,7 @@
 import $ from 'jquery';
-import {SERVER, PUBLIC_FOLDER, MIN_PAGE_SIZE, KEY_CODE_ENTER} from './constants'
+import _ from 'underscore';
+
+import {SERVER, PUBLIC_FOLDER, MIN_PAGE_SIZE, KEY_CODE_ENTER} from './constants/constants'
 
 let _this;
 
@@ -27,6 +29,8 @@ export class JasperVisualize {
         simple.click(() => _this.drawSimpleReport());
         pagination.click(() => _this.drawReportWithPagination());
         pageRange.click(() => _this.drawPageRange());
+
+        _this.getFolderTree();
 
         // this.drawSimpleReport();
     }
@@ -76,7 +80,7 @@ export class JasperVisualize {
                 nextButton = $('<button id="nextPage">Next</button>'),
                 inputPage = $(`<input id="page-current" type="number" min="1" step="1">`);
 
-            function drawControls(data) {
+            function drawControls() {
                 const totalPages = report.data().totalPages,
                     page = _this.getCurrentPage(report),
                     inputPageLabel = $('<label></label>');
@@ -163,7 +167,7 @@ export class JasperVisualize {
                 let totalPages = report.data().totalPages,
                     page = _this.getCurrentPage(report),
                     container = $('#controls-container'),
-                    inputFirst = $(`<input id="page-current" type="number" min="1" step="1" max="${totalPages-1}">`),
+                    inputFirst = $(`<input id="page-current" type="number" min="1" step="1" max="${totalPages - 1}">`),
                     inputLast = $(`<input id="page-current" type="number" min="1" step="1" max="${totalPages}">`),
                     button = $('<button id="applyPages">Apply</button>');
 
@@ -192,7 +196,7 @@ export class JasperVisualize {
 
     drawDashboard(uri) {
         visualize({
-            server: "http://127.0.0.1/-",
+            server: 'http://127.0.0.1/-',
             auth: {
                 name: "jasperadmin",
                 password: "jasperadmin",
@@ -206,8 +210,7 @@ export class JasperVisualize {
         });
     }
 
-    drawResourceSearch() {
-
+    getFolderTree() {
         try {
             visualize(SERVER, showResources, _this.handleError);
         } catch (err) {
@@ -216,17 +219,49 @@ export class JasperVisualize {
 
 
         function showResources(v) {
-            v.resourcesSearch({
-                folderUri: PUBLIC_FOLDER + '/Reports',
-                // type: 'reportUnit',
-                resourceType: "reportUnit",
-                recursive: false,
-                success: function (repo) {
-                    console.log(repo); // resourceLookups
-                },
-                error: _this.handleError
-            });
+            // let studyFolder = v.resourcesSearch({
+            //     folderUri: '/',
+            //     types: ['folder'],
+            //     recursive: false,
+            //     success: drawFolderStructure,
+            //     error: _this.handleError
+            // });
+
+            let parentFolder = 'public',
+                publicFolder = v.resourcesSearch({
+                    folderUri: '/' + parentFolder,
+                    types: ['folder'],
+                    recursive: false,
+                    success: (resources) => drawFolderStructure(parentFolder, resources),
+                    error: _this.handleError
+                });
         }
+
+        function drawFolderStructure(parentFolder, resources) {
+            const container = $('#jasper-structure'),
+                ul = $('<ul class="list-unstyled"></ul>');
+
+            _.each(resources, (resource) => {
+                ul.append(buildFolder(resource));
+            });
+
+            container.empty().append(ul);
+            console.log(resources);
+        }
+
+        function buildFolder(resource) {
+            const folderContainer = $('<li></li>');
+
+            $('<span class="glyphicon glyphicon-plus"></span>').appendTo(folderContainer);
+            $('<span class="glyphicon glyphicon-folder-close"></span>').appendTo(folderContainer);
+            $(`<span>${resource.label}</span>`).appendTo(folderContainer);
+
+            return folderContainer;
+        }
+    }
+
+    drawResourceSearch() {
+
     }
 
     //common functions
