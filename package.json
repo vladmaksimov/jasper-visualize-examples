@@ -33,10 +33,10 @@
     "bootstrap": "^3.3.7"
   },
   "scripts": {
-    "start": "webpack-dev-server --progress ",
+    "start": "webpack-dev-server --progress",
     "build": "webpack -p --config ./webpack.production.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jeevan Kishore",
+  "author": "Vladislav Maksimov",
   "license": "ISC"
 }

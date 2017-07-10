@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 function ErrorHandler() {
 
     return {
@@ -5,7 +7,12 @@ function ErrorHandler() {
     };
 
     function handleError(error) {
-        alert(error);
+        $.toast({
+            heading: 'Error',
+            text: error,
+            showHideTransition: 'fade',
+            icon: 'error'
+        })
     }
 
 }

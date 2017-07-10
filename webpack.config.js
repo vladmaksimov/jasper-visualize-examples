@@ -42,11 +42,23 @@ module.exports = {
                 use: [ 'style-loader', 'css-loader' ]
             },
             {
+                test: /\.scss$/,
+                use: [{
+                    loader: "style-loader"
+                }, {
+                    loader: "css-loader", options: {
+                        sourceMap: true
+                    }
+                }, {
+                    loader: "sass-loader", options: {
+                        sourceMap: true
+                    }
+                },
+                ]
+            },
+            {
                 test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-                loader: 'file-loader?name=img/img-[hash:6].[ext]',
-                options: {
-                    limit: 10000
-                }
+                loader: 'file-loader?name=[name].[ext]',
             },
             {
                 test: /\.(js|es6)$/,
@@ -60,7 +72,7 @@ module.exports = {
         loaders: [
             {
                 test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-                loader: "file-loader?name=img/img-[hash:6].[ext]"
+                loader: "file-loader?name=[name].[ext]"
             }
         ]
     },

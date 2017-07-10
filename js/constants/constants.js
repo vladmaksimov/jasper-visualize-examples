@@ -17,3 +17,6 @@ export const TYPE_FOLDER = ['folder'];
 export const TYPE_RESOURCES = ['reportOptions', 'dashboard', 'adhocDataView', 'reportUnit', 'domainTopic', 'inputControl'];
 
 export const CONTAINER_REPORT = '#jasper-report';
+export const CONTAINER_CONTROLS = '#jasper-report';
+
+export const URI_REPORT = '/public/Reports/RL/Report_List';
