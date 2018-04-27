@@ -1,6 +1,6 @@
 export const PUBLIC_FOLDER = '/public';
 
-export const SERVER = {server: 'http://127.0.0.1/demo/4/-'};
+export const SERVER = {server: 'https://rs-test.trialinteractive.net/demo/4/-'};
 
 export const AUTH = {
     auth: {

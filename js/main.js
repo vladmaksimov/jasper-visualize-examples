@@ -25,7 +25,8 @@ class MainClass {
     }
 
     checkES6Uglification(){
-        this.resourceService.folderStructure();
+        this.resourceService.buildBasicFolderStructure();
+        // this.resourceService.folderStructure();
     };
 
 }

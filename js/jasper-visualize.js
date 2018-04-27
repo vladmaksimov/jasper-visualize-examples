@@ -196,7 +196,7 @@ export class JasperVisualize {
 
     drawDashboard(uri) {
         visualize({
-            server: 'http://127.0.0.1/-',
+            server: 'http://rs-test.trialinteractive.net/demo/4/-',
             auth: {
                 name: "jasperadmin",
                 password: "jasperadmin",

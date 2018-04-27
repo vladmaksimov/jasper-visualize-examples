@@ -15,6 +15,7 @@ function JasperResourcesService() {
     init();
 
     return {
+        buildBasicFolderStructure: buildBasicFolderStructure,
         folderStructure: folderStructure,
         contentStructure: contentStructure
     };
@@ -27,10 +28,20 @@ function JasperResourcesService() {
 
     //Public functions
 
+    function buildBasicFolderStructure() {
+        const container = $('#jasper-structure');
+        const folderContainer = buildFolderContainer();
+        const contentContainer = buildContentContainer();
+
+        folderContainer.appendTo(container);
+        contentContainer.appendTo(container);
+
+        folderStructure(folderContainer);
+    }
+
     function folderStructure(container, folder) {
         visualize((v) => loadFolders(v, container, folder), vm.errorHandler.handleError);
     }
-
 
     function contentStructure(folder) {
         visualize(getFolders, vm.errorHandler.handleError);
@@ -51,7 +62,7 @@ function JasperResourcesService() {
 
     function folderStructureActionEvent(event) {
         const target = $(event.target);
-        const parent = target.parents('li');
+        const parent = target.closest('li');
         const container = target.parent().find('div.folder-container');
 
         if (!parent.hasClass('opened') && !parent.hasClass('closed')) {
@@ -72,10 +83,30 @@ function JasperResourcesService() {
     }
 
     function folderDocumentsEvent(event) {
-        console.log(event);
-        console.log(event.delegateTarget);
-        console.log($(event.currentTarget).attr('value'));
-        contentStructure($(event.delegateTarget).attr('value'));
+        const target = $(event.target);
+        const folder = target.is('li') ? target.attr('value') : target.closest('li').attr('value');
+        contentStructure(folder);
+    }
+
+    function folderEvent(event) {
+        const target = $(event.target);
+
+        folderDocumentsEvent(event);
+
+        if (target.is("b")) {
+            folderStructureActionEvent(event);
+        }
+    }
+
+    function folderHoverEvent(event) {
+        const target = $(event.target);
+        if (event.type == 'mouseover') {
+            target.addClass('over');
+        }
+
+        if (event.type == 'mouseout') {
+            target.removeClass('over');
+        }
     }
 
     //Private functions
@@ -104,25 +135,26 @@ function JasperResourcesService() {
         //Events
 
         if (!vm.hasEvent) {
-            $('b.icon').on('click', {visualize}, folderStructureActionEvent);
-            $('li.folder').on('click', {visualize}, folderDocumentsEvent);
+            $('li.folder').on('click', {visualize}, folderEvent)
+                .mouseover(folderHoverEvent)
+                .mouseout(folderHoverEvent);
             vm.hasEvent = true;
         }
 
     }
 
     function buildResourceStructure(resources) {
-        const container = $('.document-structure');
-        const table = $('<table class="table table-striped"></table>');
+        const container = $('.jasper-content-structure');
+        const table = $('<table class="resource-table"></table>');
         const thead = $('<thead></thead>');
         const tbody = $('<tbody></tbody>');
-        const tr = $('<tr></tr>');
+        const tr = $('<tr class="header"></tr>');
 
-        $('<th>Label</th>').appendTo(tr);
-        $('<th>Description</th>').appendTo(tr);
-        $('<th>Type</th>').appendTo(tr);
-        $('<th>Create Date</th>').appendTo(tr);
-        $('<th>Update Date</th>').appendTo(tr);
+        $('<td>Name</td>').appendTo(tr);
+        $('<td>Description</td>').appendTo(tr);
+        $('<td>Type</td>').appendTo(tr);
+        $('<td>Create Date</td>').appendTo(tr);
+        $('<td>Update Date</td>').appendTo(tr);
 
         tr.appendTo(thead);
         thead.appendTo(table);
@@ -139,7 +171,7 @@ function JasperResourcesService() {
 
     function buildFolder(resource) {
         const folderContainer = $(`<li class="folder closed" value="${resource.uri}"></li>`);
-        const folder = $(`<p class="wrap folder-structure" value="${resource.uri}"></p>`);
+        const folder = $(`<p class="wrap folder-structure"></p>`);
 
         $(`<b class="icon"></b>`).appendTo(folder);
         $(`<span>${resource.label}</span>`).appendTo(folder);
@@ -156,8 +188,8 @@ function JasperResourcesService() {
         $(`<td class="resource" uri="${resource.uri}">${resource.label}</td>`).appendTo(tr);
         $(`<td>${resource.description}</td>`).appendTo(tr);
         $(`<td>${resource['resourceType']}</td>`).appendTo(tr);
-        $(`<td>${resource['creationDate']}</td>`).appendTo(tr);
-        $(`<td>${resource['updateDate']}</td>`).appendTo(tr);
+        $(`<td>${dateFormatter(resource['creationDate'])}</td>`).appendTo(tr);
+        $(`<td>${dateFormatter(resource['updateDate'])}</td>`).appendTo(tr);
 
         return tr;
     }
@@ -180,6 +212,34 @@ function JasperResourcesService() {
             target.removeClass('closed');
             target.addClass('opened');
         }
+    }
+
+    function buildFolderContainer() {
+        const container = $('<div class="jasper-folder-structure"></div>');
+        buildContainerHeader('Folder').appendTo(container);
+
+        return container;
+    }
+
+    function buildContentContainer() {
+        const container = $('<div class="jasper-content-structure"></div>');
+        buildContainerHeader('Repository').appendTo(container);
+
+        return container;
+    }
+
+    function buildContainerHeader(title) {
+        const header = $('<div class="header"></div>');
+
+        $('<b class="icon"></b>').appendTo(header);
+        $(`<div class="title">${title}</div>`).appendTo(header);
+
+        return header;
+    }
+
+    function dateFormatter(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
     }
 
 }

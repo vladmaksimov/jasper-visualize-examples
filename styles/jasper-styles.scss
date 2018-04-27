@@ -1,4 +1,4 @@
-.closed {
+li.closed {
   .wrap {
     white-space: nowrap;
     margin: 0;
@@ -32,4 +32,67 @@
 ul {
   list-style-type: none;
   padding-left: 15px;
+}
+
+.jasper-folder-structure {
+  border-bottom: 1px solid #fff;
+  width: 20%;
+  float: left;
+
+  .header {
+    background-color: #e4e9ef;
+
+    .icon {
+      height: 28px;
+      width: 16px;
+      display: inline-block;
+      zoom: 1;
+      background: url(/pic/disclosure_indicators_sprite.png) no-repeat 0 -480px;
+      left: 0;
+      float: left;
+    }
+
+    .title {
+      color: #666;
+      font-size: 12px;
+      line-height: 28px;
+      font-weight: bold;
+    }
+  }
+}
+
+li.folder.over {
+  background-color: #efefef;
+}
+
+.jasper-content-structure {
+  border-bottom: 1px solid #fff;
+  width: 80%;
+  float: left;
+
+  .header {
+    background-color: #e4e9ef;
+
+    .title {
+      color: #666;
+      font-size: 12px;
+      line-height: 28px;
+      font-weight: bold;
+    }
+  }
+}
+
+.resource-table {
+
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0;
+
+  .header {
+    height: 30px;
+    background-color: #edf2f8;
+  }
+
+
 }
